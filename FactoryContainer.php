@@ -33,4 +33,15 @@ class FactoryContainer
     {
         return $this->runner->make(class_meth('\kilahm\chores\Factories', 'router'));
     }
+
+    <<__Memoize>>
+    public function getDb() : \PDO
+    {
+        return $this->newDb();
+    }
+
+    public function newDb() : \PDO
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\Factories', 'db'));
+    }
 }

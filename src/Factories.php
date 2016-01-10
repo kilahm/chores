@@ -11,4 +11,11 @@ class Factories
     {
         return new \kilahm\AttributeRouter\Router(new \AutoRoutes($c));
     }
+
+    <<provides('db')>>
+    public static function db(FactoryContainer $c) : \PDO
+    {
+        $settings = $c->getConfig()->dbSettings();
+        return new \PDO($settings['dsn'], $settings['user'], $settings['password'], $settings['options']);
+    }
 }
