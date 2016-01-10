@@ -16,11 +16,20 @@ class App
 
         $c = new \kilahm\IOC\FactoryContainer();
         $router = $c->getRouter();
+        $config = $c->getConfig();
 
-        $found = $router->match(self::getRoute(), $verb);
-        if(!$found) {
-            http_response_code(404);
-            echo 'Resource not found';
+        try{
+            $found = $router->match(self::getRoute(), $verb);
+            if(!$found) {
+                http_response_code(404);
+                echo 'Resource not found';
+            }
+        } catch(\Exception $e) {
+            if($config->isProduction()) {
+                // TODO: logging?
+                exit();
+            }
+            \Error::show($e);
         }
     }
 

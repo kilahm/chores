@@ -35,13 +35,24 @@ class FactoryContainer
     }
 
     <<__Memoize>>
-    public function getDb() : \PDO
+    public function getUserStore() : \kilahm\chores\model\UserStore
+    {
+        return $this->newUserStore();
+    }
+
+    public function newUserStore() : \kilahm\chores\model\UserStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\UserStore', 'factory'));
+    }
+
+    <<__Memoize>>
+    public function getDb() : \kilahm\chores\service\Db
     {
         return $this->newDb();
     }
 
-    public function newDb() : \PDO
+    public function newDb() : \kilahm\chores\service\Db
     {
-        return $this->runner->make(class_meth('\kilahm\chores\Factories', 'db'));
+        return $this->runner->make(class_meth('\kilahm\chores\service\Db', 'db'));
     }
 }

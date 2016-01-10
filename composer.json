@@ -27,7 +27,8 @@
             "template",
             "FactoryContainer.php",
             "AutoRoutes.php",
-            "Routes.php"
+            "Routes.php",
+            "src/enum"
         ]
     },
     "scripts": {
