@@ -1,0 +1,40 @@
+{
+    "name": "kilahm/chores",
+    "description": "Simple app for tracking chores done.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Isaac Leinweber",
+            "email": "brotchen@gmail.com"
+        }
+    ],
+    "require": {
+        "facebook/xhp-lib": "^2.2",
+        "hhvm/xhp-bootstrap": "^1.0",
+        "kilahm/attribute-router": "^0.1.1",
+        "kilahm/ioc-factory-container": "^0.3.2"
+    },
+    "config": {
+        "platform": {
+            "hhvm": "3.11.0"
+        }
+    },
+    "autoload": {
+        "psr-4" : {
+            "kilahm\\chores\\": "src/"
+        },
+        "classmap" : [
+            "template",
+            "FactoryContainer.php",
+            "AutoRoutes.php",
+            "Routes.php"
+        ]
+    },
+    "scripts": {
+        "build": [
+            "composer dumpautoload",
+            "findfactories src",
+            "scanroutes src/handler"
+        ]
+    }
+}
