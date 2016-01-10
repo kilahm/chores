@@ -22,10 +22,10 @@ class Login
                     </div>
                 </div>
                 <div class="row">
-                <div
-                    class="col-xs-12"
-                    style="margin-top: 10px;"
-                >
+                    <div
+                        class="col-xs-12"
+                        style="margin-top: 10px;"
+                    >
                         <button class="btn btn-block btn-default" type="submit">Log In</button>
                     </div>
                 </div>
