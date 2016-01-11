@@ -11,7 +11,7 @@ abstract class Migration
     public function signature() : string
     {
         $matches = [];
-        preg_match('/(Migration_\d+)/', static::class);
+        preg_match('/(Migration_\d+)/', static::class, $matches);
         return $matches[1];
     }
 

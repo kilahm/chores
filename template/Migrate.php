@@ -4,13 +4,18 @@ use kilahm\chores\model\Migration;
 
 class Migrate
 {
-    public function __construct(private Vector<Migration> $data)
+    public function __construct(
+        private Vector<Migration> $all,
+        private Vector<Migration> $thisRun = Vector{},
+    )
     {
     }
 
     public function show() : void
     {
-        $rows = $this->data->map($row ==> {
+        $thisRunSignatures = $this->thisRun->map($m ==> $m['signature']->get())->toSet();
+
+        $rows = $this->all->map($row ==> {
             $start = $row['start'];
             $end = $row['end'];
 
@@ -29,12 +34,15 @@ class Migrate
                 )
             ;
 
+            $class = $thisRunSignatures->contains($row['signature']->get()) ?
+                'bg-success' :
+                '';
             return
-                <tr>
-                    <td>{$row['signature']}</td>
+                <tr class={$class}>
+                    <td>{$row['signature']->get()}</td>
                     <td>{$startText}</td>
                     <td>{$durationText}</td>
-                    <td>{$row['description']}</td>
+                    <td>{$row['description']->get()}</td>
                 </tr>
             ;
         });
@@ -55,6 +63,9 @@ class Migrate
                         {$rows}
                     </tbody>
                 </table>
+                <form method="post">
+                <button class="btn btn-default btn-block" formaction="/migrate">Run Migrations</button>
+                </form>
             </bootstrap:container>
             </chores:root>
         ;

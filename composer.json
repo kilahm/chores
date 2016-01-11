@@ -28,7 +28,8 @@
             "FactoryContainer.php",
             "AutoRoutes.php",
             "Routes.php",
-            "src/enum"
+            "src/enum",
+            "migrations"
         ]
     },
     "scripts": {

@@ -19,8 +19,8 @@ final class Migrate
     public static function runMigrations(FactoryContainer $c, Vector<string> $matches) : void
     {
         $migrator = $c->getMigrator();
-        $migrator->run();
-        $view = new \Migrate($migrator->listAllMigrations());
+        $thisRun = $migrator->run();
+        $view = new \Migrate($migrator->listAllMigrations(), $thisRun);
         $view->show();
     }
 

@@ -36,7 +36,7 @@ SQL;
     public function fetchFinishedMigrations() : Vector<Migration>
     {
         $this->ensureTableExists();
-        return $this->db->query('SELECT "signature", "start", "end" FROM "migration"')
+        return $this->db->query('SELECT * FROM "migration"')
             ->all()
             ->map($row ==> $this->fromData($row))
         ;
@@ -54,7 +54,67 @@ SQL;
 
     public function save(Migration $migration) : void
     {
+        $existing = $this->db->query('SELECT * FROM migration WHERE "signature" = :signature')
+            ->one(Map{':signature' => $migration['signature']->format()});
+        if($existing === null) {
+            $this->saveNew($migration);
+            return;
+        }
+        $this->update($migration);
+    }
 
+    private function saveNew(Migration $migration) : void
+    {
+        $values = Map{
+            'signature' => $migration['signature']->format(),
+            'description' => $migration['description']->format(),
+        };
+
+        $start = $migration['start'];
+        if($start !== null) {
+             $values->set('start', $start->format());
+        }
+
+        $end = $migration['end'];
+        if($end !== null) {
+             $values->set('end', $end->format());
+        }
+
+        $fieldsAndValues = QueryBuilder::mapToFieldsAndValues($values);
+        $sql = sprintf(
+            'INSERT INTO "migration" (%s) VALUES (%s)',
+            $fieldsAndValues['field list'],
+            $fieldsAndValues['value list'],
+        );
+
+        $this->db->query($sql)->execute($fieldsAndValues['params']);
+    }
+
+    public function update(Migration $migration) : void
+    {
+        $values = Map{
+            'description' => $migration['description']->format(),
+        };
+
+        $start = $migration['start'];
+        if($start !== null) {
+             $values->set('start', $start->format());
+        }
+
+        $end = $migration['end'];
+        if($end !== null) {
+             $values->set('end', $end->format());
+        }
+
+        list($fieldList, $params) = QueryBuilder::mapToUpdateList($values);
+        $sql = sprintf(
+            'UPDATE "migration" SET %s WHERE "signature" = :signature',
+            $fieldList
+        );
+
+        $params->set(':signature', $migration['signature']->format());
+
+        $this->db->query($sql)->execute($params);
     }
 
     private function fromData(Map<string, string> $data) : Migration
