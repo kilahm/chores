@@ -48,14 +48,12 @@ class UserStore
 
     private function fromData(Map<string,string> $data) : User
     {
-        $user = $this->newUser();
-
-        $user['id']->fromStore($data->at('id'));
-        $user['publicId']->fromStore($data->at('publicId'));
-        $user['name']->fromStore($data->at('name'));
-        $user['tempPassword']->fromStore($data->at('tempPassword'));
-
-        return $user;
+        return shape(
+            'id' => field\IntField::buildFromStore('id'),
+            'publicId' => field\StringField::buildFromStore('publicId'),
+            'name' => field\StringField::buildFromStore('name'),
+            'tempPassword' => field\BoolField::buildFromStore('tempPassword'),
+        );
     }
 
     public function newUser() : User

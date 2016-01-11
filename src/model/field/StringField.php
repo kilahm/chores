@@ -6,14 +6,14 @@ use kilahm\chores\enum\SqlType;
 
 final class StringField extends SimpleField<string>
 {
-    public function fromStore(string $value) : void
+    public static function fromStore(string $value) : string
     {
-        $this->value = $value;
+        return $value;
     }
 
-    public function toStore() : string
+    public static function toStore(string $value) : string
     {
-        return $this->value;
+        return $value;
     }
 
     public function sqlType() : SqlType

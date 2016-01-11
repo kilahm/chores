@@ -1,28 +1,39 @@
 <?hh // strict
 
-type MigrationData = shape(
-    'signature' => string,
-    'description' => string,
-    'time ran' => ?DateTime,
-);
+use kilahm\chores\model\Migration;
 
 class Migrate
 {
-    private Vector<MigrationData> $data = Vector{};
-
-    public function registerMigration(MigrationData $data) : void
+    public function __construct(private Vector<Migration> $data)
     {
-        $this->data->add($data);
     }
 
     public function show() : void
     {
         $rows = $this->data->map($row ==> {
-            $dt = $row['time ran'];
+            $start = $row['start'];
+            $end = $row['end'];
+
+            $startText = $start === null ?
+                'Not started' :
+                $start->get()->format(DateTime::RFC1036)
+            ;
+
+            $durationText = $end === null ?
+                ($start === null ? 'N/A' : 'Incomplete') :
+                (
+                    $start === null ?
+                    'End time with no start time!' : (
+                        $end->get()->diff($start->get())->format('%a:%h:%i:%s')
+                    )
+                )
+            ;
+
             return
                 <tr>
                     <td>{$row['signature']}</td>
-                    <td>{$dt === null ? 'Not applied yet' : $dt->format(DateTime::RFC1036)}</td>
+                    <td>{$startText}</td>
+                    <td>{$durationText}</td>
                     <td>{$row['description']}</td>
                 </tr>
             ;
@@ -30,11 +41,15 @@ class Migrate
         echo
             <chores:root>
             <bootstrap:container>
+                <h1 style="text-align: center;">Db Migrations</h1>
                 <table class="table table-hover">
                     <thead>
-                        <th>Name</th>
-                        <th>Time applied</th>
-                        <th>Description</th>
+                        <tr>
+                            <th>Name</th>
+                            <th>Started</th>
+                            <th>Duration</th>
+                            <th>Description</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {$rows}

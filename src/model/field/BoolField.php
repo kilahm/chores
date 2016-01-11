@@ -6,18 +6,18 @@ use kilahm\chores\enum\SqlType;
 
 final class BoolField extends SimpleField<bool>
 {
-    public function fromStore(string $value) : void
+    public static function fromStore(string $value) : bool
     {
         if($value === '0' || $value === '' || $value === 'false') {
-            $this->value = false;
+            return false;
         }
 
-        $this->value = true;
+        return true;
     }
 
-    public function toStore() : string
+    public static function toStore(bool $value) : string
     {
-        return $this->value ? '1' : '0';
+        return $value ? '1' : '0';
     }
 
     public function sqlType() : SqlType

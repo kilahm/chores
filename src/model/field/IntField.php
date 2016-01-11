@@ -6,19 +6,18 @@ use kilahm\chores\enum\SqlType;
 
 final class IntField extends SimpleField<int>
 {
-    public function fromStore(string $value) : void
+    public static function fromStore(string $value) : int
     {
         if(is_numeric($value)) {
-            $this->value = (int)$value;
-            return;
+            return (int)$value;
         }
 
         throw new \UnexpectedValueException('Int field received non-numeric value from store');
     }
 
-    public function toStore() : string
+    public static function toStore(int $value) : string
     {
-        return (string)$this->value;
+        return (string)$value;
     }
 
     public function sqlType() : SqlType

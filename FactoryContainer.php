@@ -35,6 +35,17 @@ class FactoryContainer
     }
 
     <<__Memoize>>
+    public function getMigrationStore() : \kilahm\chores\model\MigrationStore
+    {
+        return $this->newMigrationStore();
+    }
+
+    public function newMigrationStore() : \kilahm\chores\model\MigrationStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\MigrationStore', 'factory'));
+    }
+
+    <<__Memoize>>
     public function getUserStore() : \kilahm\chores\model\UserStore
     {
         return $this->newUserStore();
@@ -54,5 +65,16 @@ class FactoryContainer
     public function newDb() : \kilahm\chores\service\Db
     {
         return $this->runner->make(class_meth('\kilahm\chores\service\Db', 'db'));
+    }
+
+    <<__Memoize>>
+    public function getMigrator() : \kilahm\chores\service\Migrator
+    {
+        return $this->newMigrator();
+    }
+
+    public function newMigrator() : \kilahm\chores\service\Migrator
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\service\Migrator', 'factory'));
     }
 }

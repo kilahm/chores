@@ -23,8 +23,14 @@ class AutoRoutes extends Routes
     {
         return parent::get()->addAll(Vector
         {            shape(
+                'pattern' => '#^/$#',
+                'method' => class_meth(\kilahm\chores\handler\Home::class, 'home'),
+            ),            shape(
                 'pattern' => '#^/login$#',
                 'method' => class_meth(\kilahm\chores\handler\Login::class, 'handleLogin'),
+            ),            shape(
+                'pattern' => '#^/migrate$#',
+                'method' => class_meth(\kilahm\chores\handler\Migrate::class, 'showMigrations'),
             ),
         });
     }
@@ -35,6 +41,9 @@ class AutoRoutes extends Routes
         {            shape(
                 'pattern' => '#^/login$#',
                 'method' => class_meth(\kilahm\chores\handler\Login::class, 'handleForm'),
+            ),            shape(
+                'pattern' => '#^/migrate$#',
+                'method' => class_meth(\kilahm\chores\handler\Migrate::class, 'runMigrations'),
             ),
         });
     }

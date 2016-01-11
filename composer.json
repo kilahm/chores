@@ -36,6 +36,13 @@
             "composer dumpautoload",
             "findfactories src",
             "scanroutes src/handler"
+        ],
+        "dev": [
+            "docker rm -fv chores 1>/dev/null 2>&1;echo 'Previous dev container removed'",
+            "docker run -d -p 80:80 -v $(pwd):/var/www -v $(pwd)/site.ini:/etc/hhvm/site.ini --name chores hhvm/hhvm-proxygen"
+        ],
+        "newmigration": [
+            "NOW=$(date +%s) bash -c 'sed -e s/__TIME__/$NOW/g < migrations/template.php > migrations/$NOW.php'"
         ]
     }
 }
