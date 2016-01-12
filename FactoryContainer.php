@@ -77,4 +77,15 @@ class FactoryContainer
     {
         return $this->runner->make(class_meth('\kilahm\chores\service\Migrator', 'factory'));
     }
+
+    <<__Memoize>>
+    public function getRequest() : \kilahm\chores\service\Request
+    {
+        return $this->newRequest();
+    }
+
+    public function newRequest() : \kilahm\chores\service\Request
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\service\Request', 'fromRequest'));
+    }
 }
