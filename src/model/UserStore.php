@@ -12,6 +12,16 @@ type User = shape(
 <<__ConsistentConstruct>>
 class UserStore
 {
+    const string SCHEMA = <<<SQL
+CREATE TABLE IF NOT EXISTS "user" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "publicId" STRING,
+    "name" STRING,
+    "tempPassword" INT,
+    "password" STRING
+);
+SQL;
+
     private static string $garbage = 'garbage';
     // hash of 'garbage'
     private static string $noise = '$2y$10$t.4wpJAVK6lj3PnJrZig0uQ37fB2PCU6uxApVmz/3RuCdDx.8htd6';
