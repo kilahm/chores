@@ -41,19 +41,27 @@ SQL;
     {
         $result = $this->db->query('SELECT * FROM user WHERE name = :name')
             ->one(Map{'name' => $name});
+        $user = $this->fromData($result);
 
-        if($result === null) {
+        if($result === null || $user === null) {
             $this->checkPassword(self::$garbage, self::$noise);
             return null;
         }
 
         if($this->checkPassword($password, $result->at('password'))) {
-            $user = $this->fromData($result);
             $this->rehash($password, $user);
             return $user;
         }
 
         return null;
+    }
+
+    public function fromId(int $id) : ?User
+    {
+        return $this->fromData(
+            $this->db->query('SELECT * FROM "user" WHERE "id" = :id')
+            ->one(Map{':id' => field\IntField::toStore($id)})
+        );
     }
 
     public function newUser(string $name, string $plainPassword) : void
@@ -85,8 +93,12 @@ SQL;
         ;
     }
 
-    private function fromData(Map<string,string> $data) : User
+    private function fromData(?Map<string,string> $data) : ?User
     {
+        if($data === null) {
+             return null;
+        }
+
         return shape(
             'id' => field\IntField::fromStore($data->at('id')),
             'publicId' => $data->at('publicId'),

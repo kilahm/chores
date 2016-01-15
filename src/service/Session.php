@@ -101,6 +101,18 @@ class Session
         $this->rsp->setCookie($this->cookieName, $session['key'], $session['ttl']);
     }
 
+    /**
+     * Get the user object from the valid session
+     */
+    public function currentUser() : ?UserModel
+    {
+        $ses = $this->currentSession();
+        if($ses === null) {
+             return null;
+        }
+        return $this->userStore->fromId($ses['userId']);
+    }
+
     private function makeSessionKey() : string
     {
         $attempts = 0;

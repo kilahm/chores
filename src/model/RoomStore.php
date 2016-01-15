@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "room"
 SQL;
 
     <<provides('RoomStore')>>
-    public function factory(FactoryContainer $c) : this
+    public static function factory(FactoryContainer $c) : this
     {
         return new static($c->getDb());
     }
@@ -34,7 +34,7 @@ SQL;
 
     public function fromId(int $id) : ?Room
     {
-        return $this->fromStore(
+        return $this->maybeFromStore(
             $this->db->query(sprintf(
                 'SELECT * FROM %s WHERE "id" = :id',
                 self::TABLE
@@ -48,15 +48,29 @@ SQL;
             ->execute(Map{':name' => $name});
     }
 
-    private function fromStore(?Map<string, string> $data) : ?Room
+    public function allRooms() : Vector<Room>
+    {
+        return $this->db
+            ->query('SELECT * FROM "room"')
+            ->all()
+            ->map($data ==> $this->fromStore($data))
+            ;
+    }
+
+    private function maybeFromStore(?Map<string, string> $data) : ?Room
     {
         if($data === null) {
             return null;
         }
 
+        return $this->fromStore($data);
+    }
+
+    private function fromStore(Map<string, string> $data) : Room
+    {
         return shape(
-            'id' => field\IntField::fromStore($data->at('int')),
-            'name' => (string)$data->get('name'),
+            'id' => field\IntField::fromStore($data->at('id')),
+            'name' => $data->at('name'),
         );
     }
 

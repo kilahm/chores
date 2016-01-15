@@ -13,7 +13,6 @@ class App
         $config = $c->getConfig();
         $response = $c->getResponse();
 
-
         try{
             $verb = $request->verb();
             if($verb === null) {

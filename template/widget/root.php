@@ -4,6 +4,9 @@ class :chores:root extends :x:element
 {
     protected function render() : XHPRoot
     {
+        $style = implode(';', (Map{
+            'font-size' => 'large'
+        })->mapWithKey(($k, $v) ==> "$k: $v"));
         return
             <html>
                 <head>
@@ -21,7 +24,7 @@ class :chores:root extends :x:element
 
                 </head>
                 <body>
-                    <bootstrap:root>
+                    <bootstrap:root style={$style} >
                         {$this->getChildren()}
                     </bootstrap:root>
                     <script

@@ -46,6 +46,17 @@ class FactoryContainer
     }
 
     <<__Memoize>>
+    public function getRoomStore() : \kilahm\chores\model\RoomStore
+    {
+        return $this->newRoomStore();
+    }
+
+    public function newRoomStore() : \kilahm\chores\model\RoomStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\RoomStore', 'factory'));
+    }
+
+    <<__Memoize>>
     public function getSessionStore() : \kilahm\chores\model\SessionStore
     {
         return $this->newSessionStore();
