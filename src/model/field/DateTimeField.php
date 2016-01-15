@@ -3,15 +3,9 @@
 namespace kilahm\chores\model\field;
 
 use DateTime;
-use kilahm\chores\enum\SqlType;
 
-final class DateTimeField extends SimpleField<DateTime>
+abstract final class DateTimeField
 {
-    public static function now() : this
-    {
-        return new static(new DateTime('now', new \DateTimeZone('UTC')));
-    }
-
     public static function fromStore(string $value) : DateTime
     {
         if(is_numeric($value)) {
@@ -25,10 +19,5 @@ final class DateTimeField extends SimpleField<DateTime>
     public static function toStore(DateTime $value) : string
     {
         return (string)$value->getTimestamp();
-    }
-
-    public function sqlType() : SqlType
-    {
-        return SqlType::Tint;
     }
 }

@@ -3,10 +3,10 @@
 namespace kilahm\chores\model;
 
 type User = shape(
-    'id' => field\IntField,
-    'publicId' => field\StringField,
-    'name' => field\StringField,
-    'tempPassword' => field\BoolField,
+    'id' => int,
+    'publicId' => string,
+    'name' => string,
+    'tempPassword' => bool,
 );
 
 <<__ConsistentConstruct>>
@@ -56,24 +56,53 @@ SQL;
         return null;
     }
 
+    public function newUser(string $name, string $plainPassword) : void
+    {
+        $hash = $this->makePassword($plainPassword);
+        $newData = Map{
+            ':name' => $name,
+            ':password' => $hash,
+            ':tempPassword' => '1',
+        };
+
+        $this->db
+            ->query('INSERT INTO "user" ("name", "password", "tempPassword") VALUES (:name, :password, :tempPassword)')
+            ->execute($newData)
+        ;
+
+        $id = $this->db->lastInsertId();
+        if($id === null) {
+            throw new \Exception('Unable to create a new user');
+        }
+
+        $unique = $id . $name;
+        $this->db
+            ->query('UPDATE "user" SET "publicId" = :publicId WHERE "id" = :id')
+            ->execute(Map{
+                ':publicId' => \kilahm\chores\Config::makePublicId($unique),
+                ':id' => $id,
+            })
+        ;
+    }
+
     private function fromData(Map<string,string> $data) : User
     {
         return shape(
-            'id' => field\IntField::buildFromStore('id'),
-            'publicId' => field\StringField::buildFromStore('publicId'),
-            'name' => field\StringField::buildFromStore('name'),
-            'tempPassword' => field\BoolField::buildFromStore('tempPassword'),
+            'id' => field\IntField::fromStore($data->at('id')),
+            'publicId' => $data->at('publicId'),
+            'name' => $data->at('name'),
+            'tempPassword' => field\BoolField::fromStore($data->at('tempPassword')),
         );
     }
 
-    public function newUser() : User
+    private function toData(User $user) : Map<string, string>
     {
-        return shape(
-            'id' => new field\IntField(-1),
-            'publicId' => new field\StringField(''),
-            'name' => new field\StringField(''),
-            'tempPassword' => new field\BoolField(true),
-        );
+        return Map{
+            'id' => field\IntField::toStore($user['id']),
+            'publicId' => $user['publicId'],
+            'name' => $user['name'],
+            'tempPassword' => field\BoolField::toStore($user['tempPassword']),
+        };
     }
 
     private function checkPassword(string $plain, string $hash) : bool

@@ -2,9 +2,15 @@
 
 class Login
 {
-    public function show() : void
+    public function __construct(
+        private Set<string> $invalidFields = Set{},
+    )
     {
-        echo
+    }
+
+    public function render() : string
+    {
+        return (string)
             <chores:root>
             <bootstrap:container>
                 <bootstrap:page-header
@@ -12,14 +18,8 @@ class Login
                 />
                 <form class="form-horizontal" action="/login" method="post" >
                 <div class="row">
-                    <div class="col-md-5">
-                        <label class="control-label" for="name">Your Name</label>
-                        <input class="form-control" type="text" name="name" />
-                    </div>
-                    <div class="col-md-5 col-md-offset-2">
-                        <label class="control-label" for="password">Password</label>
-                        <input class="form-control" type="password" name="password" />
-                    </div>
+                    {$this->nameField()}
+                    {$this->passField()}
                 </div>
                 <div class="row">
                     <div
@@ -32,6 +32,36 @@ class Login
                 </form>
             </bootstrap:container>
             </chores:root>
+        ;
+    }
+
+    private function nameField() : XHPRoot
+    {
+        $class = 'control-label';
+        if($this->invalidFields->contains('name')) {
+             $class .= ' has-error';
+        }
+
+        return
+            <div class="col-md-5">
+                <label class={$class} for="name">Your Name</label>
+                <input class="form-control" type="text" name="name" />
+            </div>
+        ;
+    }
+
+    private function passField() : XHPRoot
+    {
+        $class = 'control-label';
+        if($this->invalidFields->contains('pass')) {
+             $class .= ' has-error';
+        }
+
+        return
+            <div class="col-md-5">
+                <label class={$class} for="password">Password</label>
+                <input class="form-control" type="password" name="password" />
+            </div>
         ;
     }
 }

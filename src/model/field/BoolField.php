@@ -4,7 +4,7 @@ namespace kilahm\chores\model\field;
 
 use kilahm\chores\enum\SqlType;
 
-final class BoolField extends SimpleField<bool>
+abstract final class BoolField
 {
     public static function fromStore(string $value) : bool
     {
@@ -18,10 +18,5 @@ final class BoolField extends SimpleField<bool>
     public static function toStore(bool $value) : string
     {
         return $value ? '1' : '0';
-    }
-
-    public function sqlType() : SqlType
-    {
-        return SqlType::Tint;
     }
 }

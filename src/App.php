@@ -2,49 +2,60 @@
 
 namespace kilahm\chores;
 
-use kilahm\AttributeRouter\HttpVerb;
 
 class App
 {
     public static function run() : void
     {
-        $verb = self::getVerb();
-        if($verb === null) {
-            echo 'Unknown verb';
-            exit();
-        }
-
         $c = new \kilahm\IOC\FactoryContainer();
+        $request = $c->getRequest();
         $router = $c->getRouter();
         $config = $c->getConfig();
+        $response = $c->getResponse();
+
 
         try{
-            $found = $router->match(self::getRoute(), $verb);
+            $verb = $request->verb();
+            if($verb === null) {
+                // TODO: update attribute router to handle unknown verbs
+                $verb = \kilahm\AttributeRouter\HttpVerb::Get;
+            }
+
+            $found = $router->match($request->uri(), $verb);
             if(!$found) {
-                http_response_code(404);
-                echo 'Resource not found';
+                $response->setBody($config->notFoundMessage());
+                $response->setCode(404);
             }
+
         } catch(\Exception $e) {
+            $response->setBody(\Error::render($e));
+            $response->setCode(500);
+
             if($config->isProduction()) {
-                // TODO: logging?
-                exit();
+                // TODO: Logging?
+                $response->setBody('');
             }
-            \Error::show($e);
         }
-    }
 
-    private static function getRoute() : string
-    {
-        $raw = filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL);
-        if(is_string($raw)) {
-            return $raw;
+        http_response_code($response->getCode());
+
+        foreach($response->headers() as $header) {
+            header($header['name'] . ': ' . $header['value']);
         }
-        return '';
-    }
 
-    private static function getVerb() : ?HttpVerb
-    {
-        $raw = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_UNSAFE_RAW);
-        return HttpVerb::coerce($raw);
+        foreach($response->cookies() as $cookie) {
+            var_dump($cookie);
+            setcookie(
+                $cookie['key'],
+                $cookie['body'],
+                $cookie['ttl']->getTimestamp(),
+                '/', // All of the domain
+                $config->host(),
+                $config->useSSL(),
+                true, // HTTP only
+            );
+        }
+
+        echo $response->body();
     }
 }

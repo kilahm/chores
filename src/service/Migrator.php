@@ -31,17 +31,26 @@ final class Migrator
     {
         $thisRun = Vector{};
         try{
+
             $this->store->lock();
+
             foreach($this->newMigrations() as $migration) {
                 $record = $this->store->fromMigrationObject($migration);
-                $record['start'] = \kilahm\chores\model\field\DateTimeField::now();
+
+                $record['start'] = new \DateTime('now', new \DateTimeZone('UTC'));
+                $this->store->saveNew($record);
+
                 $migration->run();
-                $record['end'] = \kilahm\chores\model\field\DateTimeField::now();
-                $this->store->save($record);
+
+                $record['end'] = new \DateTime('now', new \DateTimeZone('UTC'));
+                $this->store->update($record);
+
                 $thisRun->add($record);
             }
+
             $this->store->release();
             return $thisRun;
+
         } catch (\Exception $e) {
             $this->store->abort();
             throw $e;
@@ -52,7 +61,7 @@ final class Migrator
     {
         $all = $this->store->fetchFinishedMigrations();
 
-        $finished = $all->map($m ==> $m['signature']->get())->toSet();
+        $finished = $all->map($m ==> $m['signature'])->toSet();
 
         $defined = $this->findDefinedMigrations();
         foreach($defined as $migration) {
@@ -92,7 +101,7 @@ final class Migrator
 
     private function newMigrations() : Vector<\kilahm\chores\migration\Migration>
     {
-        $finished = $this->store->fetchFinishedMigrations()->map($m ==> $m['signature']->get())->toSet();
+        $finished = $this->store->fetchFinishedMigrations()->map($m ==> $m['signature'])->toSet();
         $defined = $this->findDefinedMigrations();
         return $defined->filter($m ==> !$finished->contains($m->signature()));
     }

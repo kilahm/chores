@@ -4,7 +4,9 @@ namespace kilahm\chores\handler;
 
 use DateTime;
 use kilahm\chores\Config;
+use kilahm\chores\service\Migrator;
 use kilahm\chores\service\Request;
+use kilahm\chores\service\Response;
 use kilahm\IOC\FactoryContainer;
 
 final class Migrate
@@ -12,30 +14,59 @@ final class Migrate
     <<route('get', '/migrate')>>
     public static function showMigrations(FactoryContainer $c, Vector<string> $matches) : void
     {
-        self::checkAuth($c->getRequest(), $c->getConfig());
-        $migrator = $c->getMigrator();
-        $view = new \Migrate($migrator->listAllMigrations());
-        $view->show();
+        (new static(
+            $c->getRequest(),
+            $c->getResponse(),
+            $c->getMigrator(),
+            $c->getConfig(),
+            false,
+        ))->run();
     }
 
     <<route('post', '/migrate')>>
     public static function runMigrations(FactoryContainer $c, Vector<string> $matches) : void
     {
-        self::checkAuth($c->getRequest(), $c->getConfig());
-        $migrator = $c->getMigrator();
-        $thisRun = $migrator->run();
-        $view = new \Migrate($migrator->listAllMigrations(), $thisRun);
-        $view->show();
+        (new static(
+            $c->getRequest(),
+            $c->getResponse(),
+            $c->getMigrator(),
+            $c->getConfig(),
+            true,
+        ))->run();
     }
 
-    private static function checkAuth(Request $req, Config $config) : void
+
+    public function __construct(
+        private Request $req,
+        private Response $rsp,
+        private Migrator $migrator,
+        private Config $config,
+        private bool $shouldMigrate,
+    )
     {
-        $key = (string)$req->header('chores-migration-key');
-        if(password_verify($key, $config->migrationKey())) {
+    }
+
+    private function run() : void
+    {
+        if( ! $this->checkAuth()) {
+            $this->rsp->setBody($this->config->notFoundMessage());
+            $this->rsp->setCode(404);
             return;
         }
 
-        http_response_code(404);
-        exit();
+        $thisRun = $this->shouldMigrate ?
+            $this->migrator->run() :
+            Vector{};
+
+        $view = new \Migrate($this->migrator->listAllMigrations(), $thisRun);
+        $this->rsp->setBody($view->render());
+    }
+
+    private function checkAuth() : bool
+    {
+        $key = (string)$this->req->header('chores-migration-key');
+        return password_verify($key, $this->config->migrationKey());
+
+        // TODO: check session for super user
     }
 }

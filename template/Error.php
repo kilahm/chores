@@ -2,9 +2,9 @@
 
 class Error
 {
-    public static function show(\Exception $e) : void
+    public static function render(\Exception $e) : string
     {
-        echo
+        return (string)
             <html>
                 <head>
                 </head>

@@ -11,9 +11,9 @@ class Migrate
     {
     }
 
-    public function show() : void
+    public function render() : string
     {
-        $thisRunSignatures = $this->thisRun->map($m ==> $m['signature']->get())->toSet();
+        $thisRunSignatures = $this->thisRun->map($m ==> $m['signature'])->toSet();
 
         $rows = $this->all->map($row ==> {
             $start = $row['start'];
@@ -21,7 +21,7 @@ class Migrate
 
             $startText = $start === null ?
                 'Not started' :
-                $start->get()->format(DateTime::RFC1036)
+                $start->format(DateTime::RFC1036)
             ;
 
             $durationText = $end === null ?
@@ -29,24 +29,25 @@ class Migrate
                 (
                     $start === null ?
                     'End time with no start time!' : (
-                        $end->get()->diff($start->get())->format('%a:%h:%i:%s')
+                        $end->diff($start)->format('%a:%h:%i:%s')
                     )
                 )
             ;
 
-            $class = $thisRunSignatures->contains($row['signature']->get()) ?
+            $class = $thisRunSignatures->contains($row['signature']) ?
                 'bg-success' :
                 '';
             return
                 <tr class={$class}>
-                    <td>{$row['signature']->get()}</td>
+                    <td>{$row['signature']}</td>
                     <td>{$startText}</td>
                     <td>{$durationText}</td>
-                    <td>{$row['description']->get()}</td>
+                    <td>{$row['description']}</td>
                 </tr>
             ;
         });
-        echo
+
+        return (string)
             <chores:root>
             <bootstrap:container>
                 <h1 style="text-align: center;">Db Migrations</h1>

@@ -6,10 +6,10 @@ use kilahm\chores\service\Db;
 use kilahm\IOC\FactoryContainer;
 
 type Migration = shape(
-    'signature' => field\StringField,
-    'description' => field\StringField,
-    'start' => ?field\DateTimeField,
-    'end' => ?field\DateTimeField,
+    'signature' => string,
+    'description' => string,
+    'start' => ?\DateTime,
+    'end' => ?\DateTime,
 );
 
 final class MigrationStore
@@ -45,42 +45,18 @@ SQL;
     public function fromMigrationObject(\kilahm\chores\migration\Migration $migration) : Migration
     {
         return shape(
-            'signature' => new field\StringField($migration->signature()),
-            'description' => new field\StringField($migration->description()),
+            'signature' => $migration->signature(),
+            'description' => $migration->description(),
             'start' => null,
             'end' => null,
         );
     }
 
-    public function save(Migration $migration) : void
+    public function saveNew(Migration $migration) : void
     {
-        $existing = $this->db->query('SELECT * FROM migration WHERE "signature" = :signature')
-            ->one(Map{':signature' => $migration['signature']->format()});
-        if($existing === null) {
-            $this->saveNew($migration);
-            return;
-        }
-        $this->update($migration);
-    }
-
-    private function saveNew(Migration $migration) : void
-    {
-        $values = Map{
-            'signature' => $migration['signature']->format(),
-            'description' => $migration['description']->format(),
-        };
-
-        $start = $migration['start'];
-        if($start !== null) {
-             $values->set('start', $start->format());
-        }
-
-        $end = $migration['end'];
-        if($end !== null) {
-             $values->set('end', $end->format());
-        }
-
+        $values = $this->toData($migration);
         $fieldsAndValues = QueryBuilder::mapToFieldsAndValues($values);
+
         $sql = sprintf(
             'INSERT INTO "migration" (%s) VALUES (%s)',
             $fieldsAndValues['field list'],
@@ -92,27 +68,13 @@ SQL;
 
     public function update(Migration $migration) : void
     {
-        $values = Map{
-            'description' => $migration['description']->format(),
-        };
+        $data = $this->toData($migration);
+        list($fieldList, $params) = QueryBuilder::mapToUpdateList($data);
 
-        $start = $migration['start'];
-        if($start !== null) {
-             $values->set('start', $start->format());
-        }
-
-        $end = $migration['end'];
-        if($end !== null) {
-             $values->set('end', $end->format());
-        }
-
-        list($fieldList, $params) = QueryBuilder::mapToUpdateList($values);
         $sql = sprintf(
             'UPDATE "migration" SET %s WHERE "signature" = :signature',
             $fieldList
         );
-
-        $params->set(':signature', $migration['signature']->format());
 
         $this->db->query($sql)->execute($params);
     }
@@ -123,23 +85,43 @@ SQL;
         $end = $data->get('end');
 
         if(is_string($start) && is_numeric($start)) {
-            $start = field\DateTimeField::buildFromStore($start);
+            $start = field\DateTimeField::fromStore($start);
         } else {
              $start = null;
         }
 
         if(is_string($end) && is_numeric($end)) {
-            $end = field\DateTimeField::buildFromStore($end);
+            $end = field\DateTimeField::fromStore($end);
         } else {
              $end = null;
         }
 
         return shape(
-            'signature' => field\StringField::buildFromStore($data->at('signature')),
-            'description' => field\StringField::buildFromStore($data->at('description')),
+            'signature' => $data->at('signature'),
+            'description' => $data->at('description'),
             'start' => $start,
             'end' => $end,
         );
+    }
+
+    private function toData(Migration $data) : Map<arraykey, string>
+    {
+        $values = Map{
+            'description' => $data['description'],
+            'signature' => $data['signature'],
+        };
+
+        $start = $data['start'];
+        if($start !== null) {
+             $values->set('start', field\DateTimeField::toStore($start));
+        }
+
+        $end = $data['end'];
+        if($end !== null) {
+             $values->set('end', field\DateTimeField::toStore($end));
+        }
+
+        return $values;
     }
 
     <<__Memoize>>
@@ -154,25 +136,6 @@ SQL;
         if($result->isEmpty()) {
             $this->db->query(self::SCHEMA)->execute();
         }
-    }
-
-    public function startMigration(Migration $migration) : void
-    {
-        $this->db->query('UPDATE "migration" SET "start" = :time WHERE "signature" = :signature')
-            ->execute(Map{
-                ':time' => (string)time(),
-                ':signature' => $migration['signature']->format(),
-            });
-    }
-
-    public function endMigration(Migration $migration) : void
-    {
-        $this->db->query('UPDATE "migration" SET "end" = :time, "description" = :description WHERE "signature" = :signature')
-            ->execute(Map{
-                ':time' => (string)time(),
-                ':signature' => $migration['signature']->format(),
-                ':description' => $migration['description']->format(),
-            });
     }
 
     public function lock() : void

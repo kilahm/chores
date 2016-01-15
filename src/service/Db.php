@@ -69,4 +69,13 @@ class Db
         // Non-extant transactions can never be rolled back
         return false;
     }
+
+    public function lastInsertId() : ?string
+    {
+         $lastId = $this->pdo->lastInsertId();
+         if(is_string($lastId)) {
+             return $lastId;
+         }
+         return null;
+    }
 }

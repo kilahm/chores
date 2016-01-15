@@ -46,6 +46,17 @@ class FactoryContainer
     }
 
     <<__Memoize>>
+    public function getSessionStore() : \kilahm\chores\model\SessionStore
+    {
+        return $this->newSessionStore();
+    }
+
+    public function newSessionStore() : \kilahm\chores\model\SessionStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\SessionStore', 'factory'));
+    }
+
+    <<__Memoize>>
     public function getUserStore() : \kilahm\chores\model\UserStore
     {
         return $this->newUserStore();
@@ -87,5 +98,27 @@ class FactoryContainer
     public function newRequest() : \kilahm\chores\service\Request
     {
         return $this->runner->make(class_meth('\kilahm\chores\service\Request', 'fromRequest'));
+    }
+
+    <<__Memoize>>
+    public function getResponse() : \kilahm\chores\service\Response
+    {
+        return $this->newResponse();
+    }
+
+    public function newResponse() : \kilahm\chores\service\Response
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\service\Response', 'factory'));
+    }
+
+    <<__Memoize>>
+    public function getSession() : \kilahm\chores\service\Session
+    {
+        return $this->newSession();
+    }
+
+    public function newSession() : \kilahm\chores\service\Session
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\service\Session', 'factory'));
     }
 }
