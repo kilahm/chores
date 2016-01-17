@@ -5,12 +5,12 @@ namespace kilahm\chores\model;
 type FieldsAndValues = shape(
     'field list' => string,
     'value list' => string,
-    'params' => Map<arraykey, string>,
+    'params' => Map<string, string>,
 );
 
 abstract class QueryBuilder
 {
-    public static function mapToFieldsAndValues(Map<arraykey, string> $data) : FieldsAndValues
+    public static function mapToFieldsAndValues(Map<string, string> $data) : FieldsAndValues
     {
         $fields = $data->keys();
 
@@ -21,7 +21,7 @@ abstract class QueryBuilder
         );
     }
 
-    public static function mapToUpdateList(Map<arraykey, string> $data) : (string, Map<arraykey, string>)
+    public static function mapToUpdateList(Map<string, string> $data) : (string, Map<string, string>)
     {
         return tuple(
             implode(', ',  $data->mapWithKey(($field, $value) ==> "\"$field\" = :$field")),
@@ -29,7 +29,7 @@ abstract class QueryBuilder
         );
     }
 
-    private static function mapToParams(Map<arraykey, string> $data) : Map<arraykey, string>
+    private static function mapToParams(Map<string, string> $data) : Map<string, string>
     {
         $params = Map{};
         foreach($data as $field => $value) {

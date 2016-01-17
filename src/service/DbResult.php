@@ -13,7 +13,7 @@ class DbResult
     {
     }
 
-    public function one(Map<arraykey, string> $params = Map{}) : ?Map<string, string>
+    public function one(Map<string, string> $params = Map{}) : ?Map<string, string>
     {
         $data = $this->execute($params)->statement->fetch(PDO::FETCH_ASSOC);
 
@@ -24,7 +24,7 @@ class DbResult
         return null;
     }
 
-    public function all(Map<arraykey, string> $params = Map{}) : Vector<Map<string, string>>
+    public function all(Map<string, string> $params = Map{}) : Vector<Map<string, string>>
     {
         $data = $this->execute($params)->statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -35,7 +35,7 @@ class DbResult
         return Vector{};
     }
 
-    public function execute(Map<arraykey, string> $params = Map{}) : this
+    public function execute(Map<string, string> $params = Map{}) : this
     {
         if($this->needsToExecute) {
             $this->needsToExecute = false;

@@ -23,6 +23,17 @@ class Db
 
     public function __construct(private PDO $pdo)
     {
+        $this->enableForeignKeyChecks();
+    }
+
+    public function enableForeignKeyChecks() : void
+    {
+        $this->pdo->exec('PRAGMA foreign_keys = ON;');
+    }
+
+    public function disableForeignKeyChecks() : void
+    {
+        $this->pdo->exec('PRAGMA foreign_keys = OFF;');
     }
 
     public function query(string $sql) : DbResult

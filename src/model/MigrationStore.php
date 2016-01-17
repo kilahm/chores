@@ -104,7 +104,7 @@ SQL;
         );
     }
 
-    private function toData(Migration $data) : Map<arraykey, string>
+    private function toData(Migration $data) : Map<string, string>
     {
         $values = Map{
             'description' => $data['description'],

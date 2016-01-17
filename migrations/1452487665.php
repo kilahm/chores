@@ -14,7 +14,9 @@ class Migration_1452487665 extends Migration
         $initialSchema = [
             \kilahm\chores\model\UserStore::SCHEMA,
             \kilahm\chores\model\SessionStore::SCHEMA,
+            \kilahm\chores\model\AclStore::SCHEMA,
             \kilahm\chores\model\RoomStore::SCHEMA,
+            \kilahm\chores\model\TaskStore::SCHEMA,
         ];
 
         foreach($initialSchema as $sql) {
@@ -22,7 +24,10 @@ class Migration_1452487665 extends Migration
         }
 
         $userStore = new \kilahm\chores\model\UserStore($this->db);
-        $userStore->newUser('root', 'root');
+        $root = $userStore->newUser('root', 'root');
+
+        $aclStore = new \kilahm\chores\model\AclStore($this->db);
+        $aclStore->authorizeUser($root, \kilahm\chores\service\AuthGroup::Admin);
 
         $roomStore = new \kilahm\chores\model\RoomStore($this->db);
         $roomStore->newRoom('Kitchen');

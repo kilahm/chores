@@ -75,7 +75,7 @@ SQL;
         );
     }
 
-    private function toData(Session $data) : Map<arraykey,string>
+    private function toData(Session $data) : Map<string,string>
     {
         return Map{
             'key' => $data['key'],

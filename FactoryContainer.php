@@ -35,6 +35,17 @@ class FactoryContainer
     }
 
     <<__Memoize>>
+    public function getAclStore() : \kilahm\chores\model\AclStore
+    {
+        return $this->newAclStore();
+    }
+
+    public function newAclStore() : \kilahm\chores\model\AclStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\AclStore', 'factory'));
+    }
+
+    <<__Memoize>>
     public function getMigrationStore() : \kilahm\chores\model\MigrationStore
     {
         return $this->newMigrationStore();
@@ -68,6 +79,17 @@ class FactoryContainer
     }
 
     <<__Memoize>>
+    public function getTaskStore() : \kilahm\chores\model\TaskStore
+    {
+        return $this->newTaskStore();
+    }
+
+    public function newTaskStore() : \kilahm\chores\model\TaskStore
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\model\TaskStore', 'factory'));
+    }
+
+    <<__Memoize>>
     public function getUserStore() : \kilahm\chores\model\UserStore
     {
         return $this->newUserStore();
@@ -76,6 +98,17 @@ class FactoryContainer
     public function newUserStore() : \kilahm\chores\model\UserStore
     {
         return $this->runner->make(class_meth('\kilahm\chores\model\UserStore', 'factory'));
+    }
+
+    <<__Memoize>>
+    public function getAuth() : \kilahm\chores\service\Auth
+    {
+        return $this->newAuth();
+    }
+
+    public function newAuth() : \kilahm\chores\service\Auth
+    {
+        return $this->runner->make(class_meth('\kilahm\chores\service\Auth', 'factory'));
     }
 
     <<__Memoize>>

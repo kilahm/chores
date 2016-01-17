@@ -41,7 +41,7 @@ SQL;
     {
         $result = $this->db->query('SELECT * FROM user WHERE name = :name')
             ->one(Map{'name' => $name});
-        $user = $this->fromData($result);
+        $user = $this->maybeFromData($result);
 
         if($result === null || $user === null) {
             $this->checkPassword(self::$garbage, self::$noise);
@@ -58,13 +58,13 @@ SQL;
 
     public function fromId(int $id) : ?User
     {
-        return $this->fromData(
+        return $this->maybeFromData(
             $this->db->query('SELECT * FROM "user" WHERE "id" = :id')
             ->one(Map{':id' => field\IntField::toStore($id)})
         );
     }
 
-    public function newUser(string $name, string $plainPassword) : void
+    public function newUser(string $name, string $plainPassword) : User
     {
         $hash = $this->makePassword($plainPassword);
         $newData = Map{
@@ -83,22 +83,33 @@ SQL;
             throw new \Exception('Unable to create a new user');
         }
 
-        $unique = $id . $name;
+        $publicId = \kilahm\chores\Config::makePublicId($id . $name);
         $this->db
             ->query('UPDATE "user" SET "publicId" = :publicId WHERE "id" = :id')
             ->execute(Map{
-                ':publicId' => \kilahm\chores\Config::makePublicId($unique),
+                ':publicId' => $publicId,
                 ':id' => $id,
             })
         ;
+
+        return $this->fromData(Map{
+            'name' => $name,
+            'id' => $id,
+            'publicId' => $publicId,
+            'tempPassword' => '1',
+        });
     }
 
-    private function fromData(?Map<string,string> $data) : ?User
+    private function maybeFromData(?Map<string, string> $data) : ?User
     {
         if($data === null) {
              return null;
         }
+        return $this->fromData($data);
+    }
 
+    private function fromData(Map<string, string> $data) : User
+    {
         return shape(
             'id' => field\IntField::fromStore($data->at('id')),
             'publicId' => $data->at('publicId'),
