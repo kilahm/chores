@@ -1,0 +1,88 @@
+html {
+    font-size: 16pt;
+}
+
+body {
+    margin: 10pt;
+}
+
+input {
+    width: calc(100%);
+    padding-right: 10%;
+    padding-left: 10%;
+}
+
+input.labeled {
+    width: 60%;
+}
+
+input.error {
+    background-color: red;
+}
+
+label.input {
+    width: 30%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+ul {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    box-shadow: 0 0 5pt gray;
+    border-radius: 5pt;
+}
+
+li {
+    border: 1px solid gray;
+    margin-bottom: -1px;
+    padding-left: 10pt;
+    padding-right: 10pt;
+    line-height: 50pt;
+}
+
+li:first-child {
+    border-top-left-radius: 5pt;
+    border-top-right-radius: 5pt;
+}
+
+li:last-child {
+    border-bottom-left-radius: 5pt;
+    border-bottom-right-radius: 5pt;
+}
+
+li:hover {
+     background-color: lightgray;
+}
+
+h1.title {
+     text-align: center;
+}
+
+.done {
+    background-color: green;
+}
+
+.main-content {
+     font-weight: bold;
+}
+
+span.badge {
+    position: absolute;
+    display: inline-block;
+    right: 30pt;
+    background-color: red;
+    border-radius: 50%;
+    margin-top: 5pt;
+    height: 40pt;
+    line-height: 40pt;
+    min-width: 40pt;
+    text-align: center;
+    color: white;
+    font-size: 25pt;
+    font-weight: bold;
+}

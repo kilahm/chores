@@ -12,56 +12,23 @@ class Login
     {
         return (string)
             <chores:root>
-            <bootstrap:container>
-                <bootstrap:page-header
-                    title="Time to clean!"
-                />
-                <form class="form-horizontal" action="/login" method="post" >
-                <div class="row">
-                    {$this->nameField()}
-                    {$this->passField()}
-                </div>
-                <div class="row">
-                    <div
-                        class="col-xs-12"
-                        style="margin-top: 10px;"
-                    >
-                        <button class="btn btn-block btn-default" type="submit">Log In</button>
-                    </div>
-                </div>
+                <chores:title>
+                    Time to clean!
+                </chores:title>
+                <form action="/login" method="post" >
+                    <chores:input
+                        type="text"
+                        name="name"
+                        label="Your Name"
+                    />
+                    <chores:input
+                        type="password"
+                        name="password"
+                        label="Password"
+                    />
+                    <chores:submit-button />
                 </form>
-            </bootstrap:container>
             </chores:root>
-        ;
-    }
-
-    private function nameField() : XHPRoot
-    {
-        $class = 'control-label';
-        if($this->invalidFields->contains('name')) {
-             $class .= ' has-error';
-        }
-
-        return
-            <div class="col-md-5">
-                <label class={$class} for="name">Your Name</label>
-                <input class="form-control" type="text" name="name" />
-            </div>
-        ;
-    }
-
-    private function passField() : XHPRoot
-    {
-        $class = 'control-label';
-        if($this->invalidFields->contains('pass')) {
-             $class .= ' has-error';
-        }
-
-        return
-            <div class="col-md-5">
-                <label class={$class} for="password">Password</label>
-                <input class="form-control" type="password" name="password" />
-            </div>
         ;
     }
 }

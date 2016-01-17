@@ -12,21 +12,19 @@ class RoomList
     {
         return (string)
             <chores:root>
-                <bootstrap:container>
 
-                    <chores:top-head>
+                    <chores:title>
                         All Rooms
-                    </chores:top-head>
+                    </chores:title>
 
-                    <bootstrap:list-group>
+                    <chores:list>
                     {$this->roomList->map($room ==>
-                        <bootstrap:list-group-item href={'/room/' . $room['id']}>
+                        <chores:list-item count={5} >
                             {$room['name']}
-                        </bootstrap:list-group-item>
+                        </chores:list-item>
                     )}
-                    </bootstrap:list-group>
+                    </chores:list>
 
-                </bootstrap:container>
             </chores:root>
             ;
     }

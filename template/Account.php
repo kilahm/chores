@@ -6,8 +6,6 @@ class Account
     {
         return (string)
             <chores:root>
-                <bootstrap:container>
-                </bootstrap:container>
             </chores:root>
         ;
     }

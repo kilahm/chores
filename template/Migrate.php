@@ -49,8 +49,7 @@ class Migrate
 
         return (string)
             <chores:root>
-            <bootstrap:container>
-                <h1 style="text-align: center;">Db Migrations</h1>
+                <chores:title>Db Migrations</chores:title>
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -65,9 +64,8 @@ class Migrate
                     </tbody>
                 </table>
                 <form method="post">
-                <button class="btn btn-default btn-block" formaction="/migrate">Run Migrations</button>
+                    <chores:submit-button formaction="/migrate">Run Migrations</chores:submit-button>
                 </form>
-            </bootstrap:container>
             </chores:root>
         ;
     }

@@ -10,7 +10,6 @@
     ],
     "require": {
         "facebook/xhp-lib": "^2.2",
-        "hhvm/xhp-bootstrap": "^1.0",
         "kilahm/attribute-router": "^0.1.1",
         "kilahm/ioc-factory-container": "^0.3.2"
     },
