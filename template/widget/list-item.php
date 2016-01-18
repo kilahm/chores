@@ -7,6 +7,7 @@ class :chores:list-item extends :x:element
     children (pcdata)*;
     attribute :li;
     attribute int count = 0;
+    attribute ?string href = null;
 
     protected function render() : XHPRoot
     {
@@ -14,11 +15,19 @@ class :chores:list-item extends :x:element
             <span class="badge">{$this->getAttribute('count')}</span> :
             <x:frag />;
 
-        $item =
-            <li>
+        $href = $this->getAttribute('href');
+
+        $body =
+            <x:frag>
                 {$count}
                 <span class="main-content">{$this->getChildren()}</span>
-            </li>;
+            </x:frag>;
+
+        if($href !== null) {
+            $body = <a href={$href}>{$body}</a>;
+        }
+
+        $item = <li>{$body}</li>;
 
         $this->transferAllAttributes($item);
         return $item;

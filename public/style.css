@@ -1,3 +1,7 @@
+/**
+ * General Formatting
+ */
+
 html {
     font-size: 16pt;
 }
@@ -5,6 +9,24 @@ html {
 body {
     margin: 10pt;
 }
+
+h1.title {
+     text-align: center;
+}
+
+.done {
+    background-color: green;
+}
+
+.main-content {
+     font-weight: bold;
+}
+
+
+
+/**
+ * Forms
+ */
 
 input {
     width: calc(100%);
@@ -24,10 +46,18 @@ label.input {
     width: 30%;
 }
 
+/**
+ * Tables
+ */
+
 table {
     width: 100%;
     border-collapse: collapse;
 }
+
+/**
+ * Lists
+ */
 
 ul {
     list-style: none;
@@ -59,16 +89,10 @@ li:hover {
      background-color: lightgray;
 }
 
-h1.title {
-     text-align: center;
-}
-
-.done {
-    background-color: green;
-}
-
-.main-content {
-     font-weight: bold;
+li > a {
+     display: block;
+     color: inherit;
+     text-decoration: none;
 }
 
 span.badge {
@@ -86,3 +110,4 @@ span.badge {
     font-size: 25pt;
     font-weight: bold;
 }
+
