@@ -100,7 +100,7 @@ span.badge {
     display: inline-block;
     right: 30pt;
     background-color: red;
-    border-radius: 50%;
+    border-radius: 20pt;
     margin-top: 5pt;
     height: 40pt;
     line-height: 40pt;
@@ -109,5 +109,7 @@ span.badge {
     color: white;
     font-size: 25pt;
     font-weight: bold;
+    padding-left: 5pt;
+    padding-right: 5pt;
 }
 

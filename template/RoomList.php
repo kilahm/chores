@@ -19,7 +19,7 @@ class RoomList
 
                     <chores:list>
                     {$this->roomList->map($room ==>
-                        <chores:list-item href={'/room/' . $room['id']}count={5} >
+                        <chores:list-item href={'/room/' . $room['id']} count={5} >
                             {$room['name']}
                         </chores:list-item>
                     )}
