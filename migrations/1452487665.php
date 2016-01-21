@@ -28,14 +28,5 @@ class Migration_1452487665 extends Migration
 
         $aclStore = new \kilahm\chores\model\AclStore($this->db);
         $aclStore->authorizeUser($root, \kilahm\chores\service\AuthGroup::Admin);
-
-        $roomStore = new \kilahm\chores\model\RoomStore($this->db);
-        $roomStore->newRoom('Kitchen');
-        $roomStore->newRoom('Livingroom');
-        $roomStore->newRoom('Diningroom');
-        $roomStore->newRoom('Bathroom');
-        $roomStore->newRoom('Downstairs Hall');
-        $roomStore->newRoom('Upstairs Hall');
-        $roomStore->newRoom('Stairs');
     }
 }

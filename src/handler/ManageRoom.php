@@ -49,4 +49,30 @@ class ManageRoom
 
         $rsp->setBody($view->render());
     }
+
+    <<route('GET', '/manage/room/(\d+)')>>
+    public static function singleRoomForm(FactoryContainer $c, Vector<string> $matches) : void
+    {
+        $rsp = $c->getResponse();
+
+        if( ! $c->getAuth()->check(AuthGroup::Admin) ) {
+            $rsp->forbidden();
+            return;
+        }
+
+        $roomId = (int)$matches->at(1);
+        $roomStore = $c->getRoomStore();
+        $taskStore = $c->getTaskStore();
+
+        $room = $roomStore->fromId($roomId);
+        if($room === null) {
+            $rsp->notFound();
+            return;
+        }
+
+        $tasks = $taskStore->fromRoom($room);
+        $view = new \ManageRoom($room, $tasks);
+        $rsp->setBody($view->render());
+        return;
+    }
 }

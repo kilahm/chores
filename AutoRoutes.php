@@ -32,6 +32,9 @@ class AutoRoutes extends Routes
                 'pattern' => '#^/manage/room$#',
                 'method' => class_meth(\kilahm\chores\handler\ManageRoom::class, 'showForm'),
             ),            shape(
+                'pattern' => '#^/manage/room/(\d+)$#',
+                'method' => class_meth(\kilahm\chores\handler\ManageRoom::class, 'singleRoomForm'),
+            ),            shape(
                 'pattern' => '#^/migrate$#',
                 'method' => class_meth(\kilahm\chores\handler\Migrate::class, 'showMigrations'),
             ),            shape(

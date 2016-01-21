@@ -21,22 +21,13 @@ class ManageRooms
 
                 {$this->errors->map($e ==> <chores:error>{$e}</chores:error>)}
 
-                <chores:list>
-                    {$this->rooms->map($room ==>
-                        <chores:list-item
-                            href={'/manage/room/' . $room['id']}
-                        >
-                            {$room['name']}
-                        </chores:list-item>
-                    )}
-                </chores:list>
+                {$this->roomList()}
 
                 <form action="/manage/room/new" method="post">
                     <chores:input
                         type="text"
                         name="name"
                         placeholder="Room Name"
-                        label="Name of new room:"
                     />
                     <chores:submit-button>
                         Create New Room
@@ -44,5 +35,23 @@ class ManageRooms
                 </form>
 
             </chores:root>;
+    }
+
+    private function roomList() : XHPRoot
+    {
+        if($this->rooms->isEmpty()) {
+            return <chores:message>No rooms have been defined</chores:message>;
+        }
+
+        return
+            <chores:list>
+                {$this->rooms->map($room ==>
+                    <chores:list-item
+                        href={'/manage/room/' . $room['id']}
+                    >
+                        {$room['name']}
+                    </chores:list-item>
+                )}
+            </chores:list>;
     }
 }

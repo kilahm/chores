@@ -133,4 +133,10 @@ class Response
         $this->setCode(403);
         $this->setBody(\NotAuthorized::render());
     }
+
+    public function notFound() : void
+    {
+        $this->setCode(404);
+        $this->setBody(\NotFound::render());
+    }
 }
