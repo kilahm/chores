@@ -10,15 +10,11 @@ class Home
     public static function home(FactoryContainer $c, Vector<string> $matches) : void
     {
         $rsp = $c->getResponse();
-        $user = $c->getSession()->currentUser();
 
-        if($user === null) {
-            $view = new \Login();
-            $rsp->setBody($view->render());
-            return;
-        }
+        $view = $c->getAuth()->isUser() ?
+            new \RoomList($c->getRoomStore()->allRooms()) :
+            new \Login();
 
-        $view = new \RoomList($c->getRoomStore()->allRooms());
         $rsp->setBody($view->render());
     }
 }

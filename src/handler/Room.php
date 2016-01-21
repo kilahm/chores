@@ -2,8 +2,8 @@
 
 namespace kilahm\chores\handler;
 
-use kilahm\IOC\FactoryContainer;
 use kilahm\chores\service\AuthGroup;
+use kilahm\IOC\FactoryContainer;
 
 class Room
 {
@@ -12,8 +12,7 @@ class Room
     {
         $rsp = $c->getResponse();
         if(!$c->getAuth()->isUser()) {
-            $rsp->setCode(403);
-            $rsp->setBody(\NotAuthorized::render());
+            $rsp->forbidden();
             return;
         }
 

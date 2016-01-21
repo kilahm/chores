@@ -12,28 +12,26 @@ class :chores:input extends :x:element
 
     protected function render() : XHPRoot
     {
+        $id = $this->getID();
 
-        $label = $this->getAttribute('label');
+        $labelText = $this->getAttribute('label');
         $this->removeAttribute('label');
 
-        $hasLabel = is_string($label) && $label !== '';
-
+        $hasLabel = is_string($labelText) && $labelText !== '';
         $this->conditionClass($this->getAttribute('error'), 'error');
         $this->conditionClass($hasLabel, 'labeled');
 
-        $id = $this->getID();
+        $label = $hasLabel ?
+            <label class="input" for={$id}>{$labelText}</label> :
+            <x:frag />;
 
         $input = <input />;
         $this->transferAllAttributes($input);
 
-        if($hasLabel) {
-            return
-                <x:frag>
-                    <label class="input" for={$id}>{$label}</label>
-                    {$input}
-                </x:frag>;
-        }
-
-        return $input;
+        return
+            <div class="form-group">
+                {$label}
+                {$input}
+            </div>;
     }
 }

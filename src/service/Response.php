@@ -127,4 +127,10 @@ class Response
     {
          return $this->code;
     }
+
+    public function forbidden() : void
+    {
+        $this->setCode(403);
+        $this->setBody(\NotAuthorized::render());
+    }
 }

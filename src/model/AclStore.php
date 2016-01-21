@@ -35,7 +35,7 @@ SQL;
             ;
         $out = Set{};
         foreach($rawGroups as $rawGroup) {
-            $group = AuthGroup::coerce($rawGroup);
+            $group = AuthGroup::coerce($rawGroup['group']);
             if($group !== null) {
                 $out->add($group);
             }

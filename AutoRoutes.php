@@ -29,6 +29,9 @@ class AutoRoutes extends Routes
                 'pattern' => '#^/login$#',
                 'method' => class_meth(\kilahm\chores\handler\Login::class, 'handleLogin'),
             ),            shape(
+                'pattern' => '#^/manage/room$#',
+                'method' => class_meth(\kilahm\chores\handler\ManageRoom::class, 'showForm'),
+            ),            shape(
                 'pattern' => '#^/migrate$#',
                 'method' => class_meth(\kilahm\chores\handler\Migrate::class, 'showMigrations'),
             ),            shape(
@@ -44,6 +47,9 @@ class AutoRoutes extends Routes
         {            shape(
                 'pattern' => '#^/login$#',
                 'method' => class_meth(\kilahm\chores\handler\Login::class, 'handleForm'),
+            ),            shape(
+                'pattern' => '#^/manage/room/new$#',
+                'method' => class_meth(\kilahm\chores\handler\ManageRoom::class, 'addRoom'),
             ),            shape(
                 'pattern' => '#^/migrate$#',
                 'method' => class_meth(\kilahm\chores\handler\Migrate::class, 'runMigrations'),

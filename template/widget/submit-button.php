@@ -16,6 +16,9 @@ class :chores:submit-button extends :x:element
         $button = <button type="submit">{$text}</button>;
         $this->transferAttributesExcept($button, Set{'type'});
 
-        return $button;
+        return
+            <div class="form-group form-button">
+                {$button}
+            </div>;
     }
 }

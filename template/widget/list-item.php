@@ -18,10 +18,12 @@ class :chores:list-item extends :x:element
         $href = $this->getAttribute('href');
 
         $body =
-            <x:frag>
+            <span class="list-content">
+                <span class="list-text">
+                    {$this->getChildren()}
+                </span>
                 {$count}
-                <span class="main-content">{$this->getChildren()}</span>
-            </x:frag>;
+            </span>;
 
         if($href !== null) {
             $body = <a href={$href}>{$body}</a>;
