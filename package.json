@@ -1,0 +1,27 @@
+{
+  "name": "chores",
+  "version": "0.0.1",
+  "description": "simple web app to track chores in the Riceweber house",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kilahm/chores.git"
+  },
+  "author": "Isaac Leinweber",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/kilahm/chores/issues"
+  },
+  "homepage": "https://github.com/kilahm/chores#readme",
+  "dependencies": {
+    "font-awesome": "^4.5.0"
+  },
+  "devDependencies": {
+    "clean-css-promise": "^1.0.1",
+    "readdir-recursive-promise": "0.0.1"
+  }
+}

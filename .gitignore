@@ -2,3 +2,5 @@ composer.lock
 vendor
 data.sqlite
 src/Config.php
+node_modules
+public/style.css

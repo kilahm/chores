@@ -31,11 +31,13 @@
             "migrations"
         ]
     },
+
     "scripts": {
         "build": [
             "composer dumpautoload",
             "findfactories src",
-            "scanroutes src/handler"
+            "scanroutes src/handler",
+            "node build.js"
         ],
         "dev-remove": [
             "docker rm -fv chores 1>/dev/null 2>&1;echo 'Previous dev container removed'"
@@ -50,5 +52,7 @@
         "newmigration": [
             "NOW=$(date +%s) bash -c 'sed -e s/__TIME__/$NOW/g < migrations/template.php > migrations/$NOW.php'"
         ]
+    },
+    "require-dev": {
     }
 }
